@@ -83,7 +83,7 @@ CREATE TABLE `usuario` (
 --
 
 INSERT INTO `usuario` (`id`, `email`, `password`) VALUES
-(1, 'webadmin', '$2y$10$xQop0wF1YJ/dKhZcWDqHceUM96S04u73zGeJtU80a1GmM.H.tIjfC');
+(1, 'webadmin', '$2y$10$bXZsPIE6J3stQGqZl0cVduVzfaZsu63BK5rOIeMXnykb/UaE9sQf2');
 
 --
 -- Índices para tablas volcadas
