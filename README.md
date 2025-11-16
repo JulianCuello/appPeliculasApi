@@ -8,9 +8,9 @@
 
 - **Cuello Julian Dario**
   - Responsable: Listado ordenado, PUT, Ordenado por cualquier campo (opcional)
-  
-  **Gimenez Jessica Soledad**
 
+- **Gimenez Jessica Soledad**
+  - Responsable: Obtener película por ID, POST, Filtrado (opcional)
 ---
 
 ## 📝 Descripción
