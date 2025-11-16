@@ -294,7 +294,7 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
 - ✅ **PUT** (`/api/peliculas/:id`)
 - ✅ **Códigos HTTP**: 200, 201, 400, 404, 401, 500
 
-### Opcionales (4 puntos extra):
+### Opcionales:
 - ✅ **Paginación** (query params `pagina` y `limite`)
 - ✅ **Filtrado** por campos (query params `filtro` y `valor`)
 - ✅ **Ordenamiento por cualquier campo** (query param `orderBy`)
