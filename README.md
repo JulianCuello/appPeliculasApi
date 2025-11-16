@@ -1,169 +1,367 @@
-# Tercera entrega WEB2.
+# API REST - Películas 🎬
+
+**TPE Parte 3 - WEB 2 - 2025**
 
 ---
 
-## Integrantes:
+## 👥 Integrante
 
-- Cuello Julian Dario
-
-Hago la columna de juguetes ya que la otra era la que le correspondia a mi compañera (decidio irse a otro proyecto porque no teniamos los tiempos para realizar el trabajo compatibles)
-
-
----
-
-## Descripción
-
-Desarrollé una API para poder ver y realizar CRUD de una jugueteria.
-Es decir:es una API REST que permite la consulta, modificación, eliminación e inserción de juguetes
+- **Cuello Julian Dario**
+  - Responsable: Listado ordenado, PUT, Ordenado por cualquier campo (opcional)
+  
+  **Gimenez Jessica Soledad**
 
 ---
 
-### URL de Ejemplo
+## 📝 Descripción
 
-`jugueteriaApi/api/toys`
-
----
-
-## Endpoints
-
-### Productos
-
-- **GET** `jugueteriaApi/api/toys`  
-  muestra los juguetes disponibles en la base de datos, permitiendo opcionalmente aplicar filtrado y ordenamiento a los resultados.
-
-  - **Descripción**:  
-    Esta endpoint permite a los usuarios recuperar una lista de juguetes disponibles, con opciones para paginar, filtrar y ordenar los resultados por diferentes campos.
-
-  - **Query Params**:
-
-    - **Ordenamiento**:
-
-      - `orderBy`: Campo por el que se desea ordenar los resultados. Los campos válidos pueden incluir:
-
-        - `Nombre`: Ordena los juguetes por nombre.
-          ```http
-          GET jugueteriaApi/api/toys?orderBy=nombre
-          ```
-        - `Precio`: Ordena los juguetes por precio.
-          ```http
-          GET jugueteriaApi/api/toys?orderBy=Precio
-          ```
-        - `Marca`: Ordena los juguetes por material.
-          ```http
-          GET jugueteriaApi/api/toys?orderBy=Material
-          ```
-          - `codigo`: Ordena los juguetes por codigo.
-          ```http
-          GET jugueteriaApi/api/toys?orderBy=codigo
-          ```
-
-      - `direccion`: Dirección de orden para el campo especificado en `orderBy`. Puede ser:
-        - `ASC`: Orden ascendente (por defecto).
-        - `DESC`: Orden descendente.
-
-      **Ejemplo de Ordenamiento**:  
-      Para obtener todos los juguetes ordenados por precio en orden descendente:
-
-      ```http
-      GET jugueteriaApi/api/toys?orderBy=Precio&direccion=DESC
-      ```
-
-    - **Filtrado**:
-
-      - `filtro`: Campo por el que se desea filtrar los resultados. Los campos válidos pueden incluir:
-
-        - `Nombre`: Filtra los juguetes por el destino de inicio.
-        - `Precio`: Filtra los juguetes por precio y muestra los menores al valor pasado.
-        - `Material`: Filtra los juguetes material.
-        - `Codigo`: Filtra los juguetes por codigo.
-
-      - `valor`: Valor que se utilizará para el filtrado. Debe ser el valor específico que se comparará con el campo filtrado.
-
-      **Ejemplo de Filtrado**:  
-      Para obtener todos los juguetes que contengan en el campo 'nombre' un texto 'pelota':
-
-      ```http
-      GET jugueteriaApi/api/toys?filtro=Nombre&valor=pelota
-      ```
-
-      **Paginacion**
-
-      - `pagina`: Numero de pagina a mostrar.
-      - `limite`: Cantidad de productos a mostrar.
-
-      **Ejemplo de paginado**:  
-      Para obtener todos los productos de la 'pagina' 2 que muestre 3 por pagina (´limite´):
-
-      ```http
-      GET jugueteriaApi/api/toys?pagina=2&limite=3
-      ```
+API REST para la gestión completa de una base de datos de películas. Permite consultar, agregar, modificar y eliminar películas.
 
 ---
 
-- **GET** `jugueteriaApi/api/toy/:ID`  
-  Devuelve el juguete correspondiente al `ID` solicitado.
+## 🚀 Instalación
+
+1. Importar el archivo `app_peliculas.sql` en phpMyAdmin
+2. Verificar que `config.php` tenga las credenciales correctas de la base de datos
+3. Asegurarse de que el archivo `.htaccess` esté en la raíz del proyecto
+4. Acceder a la API mediante: `http://localhost/nombreDeTuCarpeta/api/peliculas`
 
 ---
 
-- **POST** `jugueteriaApi/api/toy`  
-  Inserta un nuevo juguete con la información proporcionada en el cuerpo de la solicitud (en formato JSON).
+## 🔗 Endpoints
 
-  - **Campos requeridos**:
+### 🎬 Películas
 
-    - `nombreProducto`: Nombre del juguete.
-    - `precio`: Precio del producto
-    - `material`: material del juguete
-    - `id_marca`: id del juguete (FK).
-    - `codigo`: Codigo del juguete
-    - `img`: Url de la imagen del producto.
+#### **GET** `/api/peliculas`
 
-    **Ejemplo de json a insertar**:
+Obtiene todas las películas con opciones de filtrado, ordenamiento y paginación.
 
-    ```json
-    {
-     
-    "nombreProducto": "pelota handball",
-    "precio": 1000,
-    "material": "Plástico",
-    "id_marca": 6,
-    "codigo": 12345,
-    "img": "https://acdn.hugojuguetes.com/stores/001/474/949/toys/sin-titulo-1101-1347hfst3tyhgeg-640-0.webp"
-    }
-    ```
+**Query Parameters opcionales:**
+
+| Parámetro | Descripción | Valores válidos | Ejemplo |
+|-----------|-------------|-----------------|---------|
+| `orderBy` | Campo por el cual ordenar | `nombre_pelicula`, `duracion`, `genero`, `fecha_estreno`, `publico` | `orderBy=duracion` |
+| `direccion` | Dirección del ordenamiento | `ASC`, `DESC` | `direccion=DESC` |
+| `filtro` | Campo por el cual filtrar | `nombre_pelicula`, `duracion`, `genero`, `descripcion`, `publico`, `fecha_estreno` | `filtro=genero` |
+| `valor` | Valor a filtrar | Cualquier texto o número | `valor=Acción` |
+| `pagina` | Número de página | Número entero positivo | `pagina=2` |
+| `limite` | Cantidad de resultados por página | Número entero positivo | `limite=5` |
+
+**Ejemplos de uso:**
+```http
+# Obtener todas las películas
+GET /api/peliculas
+
+# Ordenar por duración descendente
+GET /api/peliculas?orderBy=duracion&direccion=DESC
+
+# Filtrar películas por género "Acción"
+GET /api/peliculas?filtro=genero&valor=Acción
+
+# Filtrar películas con duración menor o igual a 120 minutos
+GET /api/peliculas?filtro=duracion&valor=120
+
+# Paginación: página 2, mostrando 3 películas por página
+GET /api/peliculas?pagina=2&limite=3
+
+# Combinación: filtrar por género "Drama" y ordenar por fecha de estreno
+GET /api/peliculas?filtro=genero&valor=Drama&orderBy=fecha_estreno&direccion=DESC
+```
+
+**Respuesta exitosa (200 OK):**
+```json
+[
+  {
+    "id_pelicula": 1,
+    "nombre_pelicula": "El Padrino",
+    "duracion": 175,
+    "genero": "Drama",
+    "descripcion": "La historia de la familia Corleone",
+    "fecha_estreno": "1972-03-24",
+    "publico": "Mayores de 16",
+    "img": "https://ejemplo.com/padrino.jpg"
+  }
+]
+```
 
 ---
 
-- **PUT** `jugueteriaApi/api/toys/:ID`  
-  Modifica el juguete correspondiente al `ID` solicitado. La información a modificar se envía en el cuerpo de la solicitud (en formato JSON).
+#### **GET** `/api/peliculas/:id`
 
-  - **Campos modificables**:
-    - `nombreProducto`
-    - `precio`
-    - `material`
-    - `id_marca`
-    - `codigo`
-    - `img`
+Obtiene una película específica por su ID.
+
+**Ejemplo:**
+```http
+GET /api/peliculas/1
+```
+
+**Respuesta exitosa (200 OK):**
+```json
+{
+  "id_pelicula": 1,
+  "nombre_pelicula": "El Padrino",
+  "duracion": 175,
+  "genero": "Drama",
+  "descripcion": "La historia de la familia Corleone",
+  "fecha_estreno": "1972-03-24",
+  "publico": "Mayores de 16",
+  "img": "https://ejemplo.com/padrino.jpg"
+}
+```
+
+**Respuesta de error (404 Not Found):**
+```json
+"La película con el id=999 no existe"
+```
 
 ---
 
-- **DELETE** `jugueteriaApi/api/toys/:ID`  
-  Elimina el producto correspondiente al `ID` solicitado.
+#### **POST** `/api/peliculas` 🔒
+
+Crea una nueva película. **Requiere autenticación** (Bearer Token).
+
+**Headers requeridos:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Body (JSON):**
+```json
+{
+  "nombre_pelicula": "Matrix",
+  "duracion": 136,
+  "genero": "Ciencia Ficción",
+  "descripcion": "Un hacker descubre la verdad sobre la realidad",
+  "fecha_estreno": "1999-03-31",
+  "publico": "Mayores de 13",
+  "img": "https://ejemplo.com/matrix.jpg"
+}
+```
+
+**Respuesta exitosa (201 Created):**
+```json
+{
+  "id_pelicula": 6,
+  "nombre_pelicula": "Matrix",
+  "duracion": 136,
+  "genero": "Ciencia Ficción",
+  "descripcion": "Un hacker descubre la verdad sobre la realidad",
+  "fecha_estreno": "1999-03-31",
+  "publico": "Mayores de 13",
+  "img": "https://ejemplo.com/matrix.jpg"
+}
+```
+
+**Respuestas de error:**
+
+- **400 Bad Request:** `"Faltan completar datos"`
+- **401 Unauthorized:** `"No autorizado"`
+
+---
+
+#### **PUT** `/api/peliculas/:id` 🔒
+
+Modifica una película existente. **Requiere autenticación** (Bearer Token).
+
+**Headers requeridos:**
+```
+Authorization: Bearer {token}
+Content-Type: application/json
+```
+
+**Ejemplo:**
+```http
+PUT /api/peliculas/1
+```
+
+**Body (JSON):**
+```json
+{
+  "nombre_pelicula": "El Padrino: Edición Especial",
+  "duracion": 180,
+  "genero": "Drama",
+  "descripcion": "La historia de la familia Corleone - Versión extendida",
+  "fecha_estreno": "1972-03-24",
+  "publico": "Mayores de 16",
+  "img": "https://ejemplo.com/padrino-special.jpg"
+}
+```
+
+**Respuesta exitosa (200 OK):**
+```json
+{
+  "id_pelicula": 1,
+  "nombre_pelicula": "El Padrino: Edición Especial",
+  "duracion": 180,
+  "genero": "Drama",
+  "descripcion": "La historia de la familia Corleone - Versión extendida",
+  "fecha_estreno": "1972-03-24",
+  "publico": "Mayores de 16",
+  "img": "https://ejemplo.com/padrino-special.jpg"
+}
+```
+
+**Respuestas de error:**
+
+- **400 Bad Request:** `"Faltan completar datos"`
+- **401 Unauthorized:** `"No autorizado"`
+- **404 Not Found:** `"La película con el id=999 no existe"`
+
+---
+
+#### **DELETE** `/api/peliculas/:id` 🔒
+
+Elimina una película. **Requiere autenticación** (Bearer Token).
+
+**Headers requeridos:**
+```
+Authorization: Bearer {token}
+```
+
+**Ejemplo:**
+```http
+DELETE /api/peliculas/1
+```
+
+**Respuesta exitosa (200 OK):**
+```json
+"La película con el id=1 se eliminó con éxito"
+```
+
+**Respuestas de error:**
+
+- **401 Unauthorized:** `"No autorizado"`
+- **404 Not Found:** `"La película con el id=999 no existe"`
 
 ---
 
 ### 🔐 Autenticación
 
-Para acceder a recursos protegidos, los usuarios deben autenticarse utilizando un **token**.
+#### **GET** `/api/usuarios/token`
 
-- **POST** `/usuarios/token`  
-  Este endpoint permite a los usuarios obtener un token JWT. Para utilizarlo, se deben enviar las credenciales en el encabezado de la solicitud en formato Base64 (usuario:contraseña).
+Obtiene un token JWT para autenticarse en los endpoints protegidos.
 
-  - **iniciar sesión**:
+**Headers requeridos:**
+```
+Authorization: Basic {base64(usuario:contraseña)}
+```
 
-    - **Nombre de usuario**: `webadmin`
-    - **Contraseña**: `admin`
+**Credenciales de prueba:**
 
-  - **Respuesta**:  
-    Si las credenciales son válidas, se devuelve un token JWT que puede ser utilizado para autenticar futuras solicitudes a la API.
+- **Usuario:** `webadmin`
+- **Contraseña:** `admin`
+
+**Cómo generar el header en Base64:**
+
+En la consola del navegador o en Node.js:
+```javascript
+btoa('webadmin:admin') // Resultado: d2ViYWRtaW46YWRtaW4=
+```
+
+**Ejemplo de header:**
+```
+Authorization: Basic d2ViYWRtaW46YWRtaW4=
+```
+
+**Respuesta exitosa (200 OK):**
+```json
+"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjEsImVtYWlsIjoid2ViYWRtaW4iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE3MzE0NTA2MDAsImV4cCI6MTczMTQ1MTIwMCwiU2FsdWRvIjoiSG9sYSJ9.8x2L_9QWvKJ3fH4nM7pR5tY6uZ1wS3dC8aB2eF4gH6k"
+```
+
+**Uso del token:**
+
+Una vez obtenido el token, usarlo en los endpoints protegidos:
+```
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9...
+```
+
+**Respuesta de error (400 Bad Request):**
+```json
+"Error en los datos ingresados"
+```
 
 ---
+
+## ✅ Requerimientos Cumplidos
+
+### Obligatorios:
+- ✅ **API RESTful**
+- ✅ **GET colección completa** (`/api/peliculas`)
+- ✅ **Ordenamiento** por al menos un campo con dirección ASC/DESC
+- ✅ **GET por ID** (`/api/pelicula/:id`)
+- ✅ **POST** (`/api/pelicula`)
+- ✅ **PUT** (`/api/peliculas/:id`)
+- ✅ **Códigos HTTP**: 200, 201, 400, 404, 401, 500
+
+### Opcionales (4 puntos extra):
+- ✅ **Paginación** (query params `pagina` y `limite`)
+- ✅ **Filtrado** por campos (query params `filtro` y `valor`)
+- ✅ **Ordenamiento por cualquier campo** (query param `orderBy`)
+- ✅ **Autenticación con Token JWT** (Bearer Token)
+
+---
+
+## 🗄️ Estructura de la Base de Datos
+
+### Tabla `pelicula`
+
+| Campo | Tipo | Descripción |
+|-------|------|-------------|
+| `id_pelicula` | INT (PK) | ID único de la película |
+| `nombre_pelicula` | VARCHAR(200) | Nombre de la película |
+| `duracion` | INT | Duración en minutos |
+| `genero` | VARCHAR(200) | Género de la película |
+| `descripcion` | VARCHAR(300) | Descripción breve |
+| `fecha_estreno` | DATE | Fecha de estreno |
+| `publico` | VARCHAR(300) | Clasificación por edades |
+| `img` | VARCHAR(500) | URL de la imagen |
+
+---
+
+## 📂 Estructura del Proyecto
+```
+peliculasApi/
+├── app/
+│   ├── controllers/
+│   │   ├── pelicula.controller.php
+│   │   └── user.api.controller.php
+│   ├── models/
+│   │   ├── pelicula.model.php
+│   │   └── user.model.php
+│   ├── views/
+│   │   └── json.view.php
+│   └── middlewares/
+│       └── jwt.auth.middleware.php
+├── libs/
+│   ├── jwt.php
+│   ├── request.php
+│   ├── response.php
+│   └── router.php
+├── .htaccess
+├── config.php
+├── router.php
+├── app_peliculas.sql
+└── README.md
+```
+
+---
+
+## 📌 Notas Importantes
+
+- El token JWT expira en **10 minutos** (600 segundos)
+- Todos los endpoints que modifican datos (POST, PUT, DELETE) requieren autenticación
+- La paginación comienza desde la página 1
+- El filtro por duración muestra películas con duración **menor o igual** al valor especificado
+- Los demás filtros usan búsqueda parcial (LIKE)
+- Formato de fecha: `YYYY-MM-DD` (ej: `2010-07-16`)
+
+---
+
+## 🔗 Repositorio
+
+URL del repositorio: [(https://github.com/JulianCuello/appPeliculasApi.git)]
+
+---
+
+**Fecha de entrega:** Viernes 21 de Noviembre de 2025
